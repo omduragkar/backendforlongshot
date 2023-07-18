@@ -16,6 +16,6 @@ router.post('/create', createItemTypesController)
 router.put('/:id', renameItemTypesController)
 
 // Delete an item type
-router.delete('/:id', deleteItemTypesController)
+router.delete('/delete/:id', deleteItemTypesController)
 
 module.exports = router

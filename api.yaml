@@ -1,0 +1,848 @@
+---
+definitions:
+  Item:
+    properties:
+      _id:
+        example: 64b67275f2d3afa8ba1c74ba
+        type: string
+      expirationDate:
+        example: "2023-11-23T11:15:52.925Z"
+        format: date-time
+        type: string
+      itemType:
+        $ref: "#/definitions/ItemType"
+      storageSpace:
+        $ref: "#/definitions/StorageSpace"
+    type: object
+  ItemType:
+    properties:
+      _id:
+        example: 64b67275f2d3afa8ba1c74ba
+        type: string
+      name:
+        example: Item Type Name
+        type: string
+    type: object
+  StorageSpace:
+    properties:
+      _id:
+        example: 64b671b65f34db3748d444cc
+        type: string
+      name:
+        example: Storage Space Name
+        type: string
+    type: object
+info:
+  description: Task for LongShot AI Assingment Backend. Backend API to manage and categorize stock for a small-scale grocery store.
+  title: LongShot AI Assingment Backend
+  version: 1.0.0
+openapi: 3.0.0
+paths:
+  /items:
+    get:
+      parameters:
+        - description: "The page number for pagination (default: 1)"
+          in: query
+          name: page
+          required: false
+          type: integer
+        - description: "The number of items per page (default: 10)"
+          in: query
+          name: limit
+          required: false
+          type: integer
+        - description: "Sort items by a specific field (default: expirationDate)"
+          in: query
+          name: sortBy
+          required: false
+          type: string
+      responses:
+        "200":
+          description: Success response with a list of items.
+          schema:
+            properties:
+              items:
+                items:
+                  $ref: "#/definitions/Item"
+                type: array
+              message:
+                example: success
+                type: string
+              success:
+                example: true
+                type: boolean
+            type: object
+        "500":
+          description: Internal server error response.
+          schema:
+            properties:
+              error:
+                properties:
+                  code:
+                    example: 500
+                    type: integer
+                  message:
+                    example: Internal server error
+                    type: string
+                type: object
+              message:
+                example: Internal server error
+                type: string
+              success:
+                example: false
+                type: boolean
+            type: object
+      summary: Get a list of Items
+      tags:
+        - Items
+  /items/create:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                expirationDate:
+                  example: "2023-11-23T11:15:52.925Z"
+                  format: date-time
+                  type: string
+                itemType:
+                  example: 64b67275f2d3afa8ba1c74ba
+                  type: string
+                storageSpace:
+                  example: 64b671b65f34db3748d444cc
+                  type: string
+              type: object
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  item:
+                    properties:
+                      _id:
+                        example: 64b67275f2d3afa8ba1c74ba
+                        type: string
+                      expirationDate:
+                        example: "2023-11-23T11:15:52.925Z"
+                        format: date-time
+                        type: string
+                      itemType:
+                        example: 64b67275f2d3afa8ba1c74ba
+                        type: string
+                      storageSpace:
+                        example: 64b671b65f34db3748d444cc
+                        type: string
+                    type: object
+                  message:
+                    example: Success
+                    type: string
+                  success:
+                    example: true
+                    type: boolean
+                type: object
+          description: Success response when an Item is created.
+        "404":
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    properties:
+                      code:
+                        example: 404
+                        type: integer
+                      message:
+                        example: Maximum limit reached!
+                        type: string
+                    type: object
+                  message:
+                    example: Maximum limit reached!
+                    type: string
+                  success:
+                    example: false
+                    type: boolean
+                type: object
+          description: Error response when the creation is unsuccessful.
+        "500":
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    properties:
+                      code:
+                        example: 500
+                        type: integer
+                      message:
+                        example: Internal server error
+                        type: string
+                    type: object
+                  message:
+                    example: Internal server error
+                    type: string
+                  success:
+                    example: false
+                    type: boolean
+                type: object
+          description: Internal server error response.
+      summary: Create a new Item
+      tags: [Items]
+  /items/{id}:
+    put:
+      summary: "Update an Item by ID"
+      tags:
+        - "Items"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the Item to be updated"
+          required: true
+          type: "string"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                changestorageSpaceId:
+                  type: "string"
+                  example: "64b671b65f34db3748d444cc"
+      responses:
+        200:
+          description: "Success response when an Item is updated successfully."
+          schema:
+            type: "object"
+            properties:
+              success:
+                type: "boolean"
+                example: true
+              message:
+                type: "string"
+                example: "Success!"
+              itemUpdate:
+                $ref: "#/definitions/Item"
+        404:
+          description: "Error response when the maximum storage space is reached or the Item is not found."
+          schema:
+            type: "object"
+            properties:
+              success:
+                type: "boolean"
+                example: false
+              message:
+                type: "string"
+                example: "Maximum storage space reached!"
+              error:
+                type: "object"
+                properties:
+                  code:
+                    type: "integer"
+                    example: 404
+                  message:
+                    type: "string"
+                    example: "Maximum storage space reached!"
+        500:
+          description: "Internal server error response."
+          schema:
+            type: "object"
+            properties:
+              success:
+                type: "boolean"
+                example: false
+              message:
+                type: "string"
+                example: "Internal Update Issue!"
+              error:
+                type: "object"
+                properties:
+                  code:
+                    type: "integer"
+                    example: 500
+                  message:
+                    type: "string"
+                    example: "Internal Update Issue!"
+  /items/delete/{id}:
+    delete:
+      parameters:
+        - description: ID of the Item to be deleted
+          in: path
+          name: id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success response when an Item is deleted successfully.
+          schema:
+            properties:
+              message:
+                example: Item deleted successfully
+                type: string
+              success:
+                example: true
+                type: boolean
+            type: object
+        "404":
+          description: Error response when the Item is not found.
+          schema:
+            properties:
+              error:
+                properties:
+                  code:
+                    example: 404
+                    type: integer
+                  message:
+                    example: Item not found
+                    type: string
+                type: object
+              message:
+                example: Item not found
+                type: string
+              success:
+                example: false
+                type: boolean
+            type: object
+        "500":
+          description: Internal server error response.
+          schema:
+            properties:
+              error:
+                properties:
+                  code:
+                    example: 500
+                    type: integer
+                  message:
+                    example: Internal server error
+                    type: string
+                type: object
+              message:
+                example: Internal server error
+                type: string
+              success:
+                example: false
+                type: boolean
+            type: object
+      summary: Delete an Item by ID
+      tags:
+        - Items
+  
+  /itemTypes/create :
+    post:
+      summary: Create an item type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the item type
+                requiresRefrigeration:
+                  type: boolean
+                  description: Whether the item type requires refrigeration or not
+              required:
+                - name
+                - requiresRefrigeration
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Success
+                  data:
+                    $ref: '#/definitions/ItemType'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+                  error:
+                    type: object
+                    description: The error object
+                    properties:
+                      message:
+                        type: string
+                        description: Error message
+      tags:
+        - Items Types
+  
+  /itemTypes/{id}:
+    put:
+      summary: Update an item type
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the item type to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The new name of the item type
+              required:
+                - name
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Success
+                  data:
+                    $ref: '#/components/schemas/ItemType'
+        '404':
+          description: Item type not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Item type not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+                  error:
+                    type: object
+                    description: The error object
+                    properties:
+                      message:
+                        type: string
+                        description: Error message
+      tags:
+        - Items Types
+  
+  /itemTypes/delete/{id}:
+    delete:
+      summary: Delete an item type
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the item type to delete
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Item type deleted successfully
+        '400':
+          description: Item type is still in use
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Item type is still in use
+        '404':
+          description: Item type not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Item type not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+                  error:
+                    type: object
+                    description: The error object
+                    properties:
+                      message:
+                        type: string
+                        description: Error message
+      tags:
+        - Items Types
+  
+  /storageSpaces/create:
+    post:
+      summary: Create a storage space
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the storage space
+                maximumLimit:
+                  type: integer
+                  description: The maximum limit of the storage space
+                refrigeration:
+                  type: boolean
+                  description: Whether the storage space requires refrigeration or not
+              required:
+                - name
+                - maximumLimit
+                - refrigeration
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Storage space created
+                  data:
+                    $ref: '#/components/schemas/StorageSpace'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+                  error:
+                    type: object
+                    description: The error object
+                    properties:
+                      message:
+                        type: string
+                        description: Error message
+      tags:
+        - Storage Spaces
+
+  /storageSpaces/:
+    get:
+      summary: Get all items in a storage space
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the storage space to get items from
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: All Items in StorageSpaces
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Item'
+        '404':
+          description: Storage space not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Storage space not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+                  error:
+                    type: object
+                    description: The error object
+                    properties:
+                      message:
+                        type: string
+                        description: Error message
+      tags:
+        - Storage Spaces
+  
+  /storageSpaces/{id}:
+    get:
+      summary: Get all items in a storage space
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the storage space to get items from
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: All Items in StorageSpaces
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Item'
+        '404':
+          description: Storage space not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Storage space not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+                  error:
+                    type: object
+                    description: The error object
+                    properties:
+                      message:
+                        type: string
+                        description: Error message
+      tags:
+        - Storage Spaces
+  /storageSpaces/update/{id}:
+    put:
+      summary: Update a storage space
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the storage space to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The new name of the storage space
+              required:
+                - name
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Success, storageSpace
+                  data:
+                    type: object
+                    $ref: '#/components/schemas/StorageSpace'
+        '404':
+          description: Storage space not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Storage space not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+                  error:
+                    type: object
+                    description: The error object
+                    properties:
+                      message:
+                        type: string
+                        description: Error message
+      tags:
+        - Storage Spaces
+  
+  /storageSpaces/delete/{id}:
+    delete:
+      summary: Delete a storage space
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the storage space to delete
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Storage space deleted successfully
+                  data:
+                    type: object
+                    $ref: '#/components/schemas/StorageSpace'
+        '400':
+          description: Storage space is not empty
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Storage space is not empty
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Item'
+        '404':
+          description: Storage space not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Storage space not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+                  error:
+                    type: object
+                    description: The error object
+                    properties:
+                      message:
+                        type: string
+                        description: Error message
+      tags:
+        - Storage Spaces
+
+definitions:
+  Item:
+    type: "object"
+    properties:
+      _id:
+        type: "string"
+        example: "64b67275f2d3afa8ba1c74ba"
+      itemType:
+        $ref: "#/definitions/ItemType"
+      expirationDate:
+        type: "string"
+        format: "date-time"
+        example: "2023-11-23T11:15:52.925Z"
+      storageSpace:
+        $ref: "#/definitions/StorageSpace"
+
+  ItemType:
+    type: "object"
+    properties:
+      _id:
+        type: "string"
+        example: "64b67275f2d3afa8ba1c74ba"
+      name:
+        type: "string"
+        example: "Item Type Name"
+
+  StorageSpace:
+    type: "object"
+    properties:
+      _id:
+        type: "string"
+        example: "64b671b65f34db3748d444cc"
+      name:
+        type: "string"
+        example: "Storage Space Name"
+
+
+servers:
+  - description: Local server
+    url: http://localhost:5000/

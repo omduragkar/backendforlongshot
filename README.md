@@ -1,5 +1,29 @@
-# backendforlongshot
-# APIs for store manager
+# APIs to manage and categorize stock for a small-scale grocery store.
+
+# Installation
+    there are 4 easy steps to run this application:
+        1. Click in clone button on the gtihub repo: https://github.com/omduragkar/backendforlongshot.git
+        2. Or  download zip file and make sure you have installed nodejs
+        3. Now  add command in file:
+            npm i -g pnpm
+            pnpm install
+            node index.js
+        4. Server is running you can check api which are PORT on: 5000
+        Viola! It's working now!
+
+    
+
+
+    Note:
+        1. To check API on swagger you can go to http://localhost:5000/api-docs/ after intializing
+        2. You can contact me through: +91-8459162509 or mailto:omaduragkar@gmail.com
+        3. Since it's a private repo as you mentioned I have given access to the link: https://github.com/longshot-ai
+        4. Sharing postman folder to check throughly: 
+            https://elements.getpostman.com/redirect?entityId=28583656-e7137bb0-1b26-479d-aa23-3ca367e14dec&entityType=collection
+
+
+# That's it from my side!
+    
 ## TASK from LongShot AI
 
 Full Stack Backend Developer

@@ -63,7 +63,7 @@ router.post('/create', storageSpaceCreate)
  * }
  * ]
  */
-// *TODO: List of items in the storage spaces.
+// *TODO: List of items in the storage spaces. Done
 router.get('/', getStorageSpaces)
 
 /**
@@ -88,9 +88,23 @@ router.get('/', getStorageSpaces)
 router.get('/:id', singleStorageSpace)
 
 // Rename a storage space
-router.put('/:id', updateStorageSpaceSingle);
+/**
+ * OWNER @omduragkar
+ * PUT /storageSpaces/update/:id
+ * NO AUTHENTICATION REQUIRED
+ * Update a storage space
+ * @returns {Object} Updated storage space objectZ
+ */
+router.put('/update/:id', updateStorageSpaceSingle);
 
+/**
+ * OWNER @omduragkar
+ * DELETE /storageSpaces/delete/:id
+ * NO AUTHENTICATION REQUIRED
+ * Delete a storage space
+ * @returns {Object} Deleted storage space object
+ */
 // Delete a storage space
-router.delete('/:id', deleteSingleStorageSpace)
+router.delete('/delete/:id', deleteSingleStorageSpace)
 
 module.exports = router

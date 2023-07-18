@@ -34,21 +34,11 @@ const storageSpaceCreate = async (req, res) => {
 }
 
 /**
- * @swagger
- * @param {} req
- * @param {*} res
- *
- * @swagger
- * /storageSpaces:
- * get:
- * description: Get all storage spaces
- * responses:
- * 200:
- * description: Array of storage space objects
- * 500:
- * description: Internal server error
+ * @desc Get all storage spaces
+ * @route GET /storageSpaces
+ * @access Public
+ * @returns {Array} Array of storage space objects
  */
-
 const getStorageSpaces = async (req, res) => {
   try {
     const storageSpaces = await StorageSpace.find()
@@ -57,24 +47,12 @@ const getStorageSpaces = async (req, res) => {
     response(res, 500,  'Internal server error', error, true);
   }
 }
+
 /**
- *  @swagger  
- * @param {*} req 
- * @param {*} res 
- * @returns 
- * 
- * @swagger
- * /storageSpaces/{id}:
- * get:
- * description: Get a single storage space
- * responses:
- * 200:
- * description: Storage space object
- * 404:
- * description: Storage space not found
- * 500:
- * description: Internal server error
- * 
+ * @desc Get all items in a storage space
+ * @route GET /storageSpaces/:id
+ * @access Public
+ * @returns {Array} Array of item objects
  */
 const singleStorageSpace = async (req, res) => {
   try {
@@ -91,31 +69,16 @@ const singleStorageSpace = async (req, res) => {
     response(res, 500, 'Internal server error', error, true);
   }
 }
-/**
- * 
- *   @swagger  
- * @param {
- * * name
- * * } req
- * @param {*
- * * 
- * } res 
- * @returns
- * 
- * @swagger
- * /storageSpaces/{id}:
- * put:
- * description: Update a single storage space
- * responses:
- * 200:
- * description: Storage space object
- * 404:
- * description: Storage space not found
- * 500:
- * description: Internal server error
- *  
- */
 
+/**
+ * @desc Update a storage space
+ * @route PUT /storageSpaces/update/:id
+ * @access Public
+ * @returns {Object} Updated storage space object
+ * @param {string} name - Storage space name
+ * @param {number} maximumLimit - Maximum number of items that can be stored in the space
+ * @param {boolean} refrigeration - Whether the space is refrigerated or not
+ */
 const updateStorageSpaceSingle =  async (req, res) => {
     try {
       const { name } = req.body
@@ -134,12 +97,13 @@ const updateStorageSpaceSingle =  async (req, res) => {
     }
   }
 
-  /**
-   * 
-   * @param {*} req 
-   * @param {*} res 
-   * @returns 
-   */
+/**
+ * @desc Delete a storage space
+ * @route DELETE /storageSpaces/delete/:id
+ * @access Public
+ * @returns {Object} Deleted storage space object
+ * 
+ */
 const deleteSingleStorageSpace = async (req, res) => {
     try {
       const storageSpace = await StorageSpace.findById(req.params.id)
