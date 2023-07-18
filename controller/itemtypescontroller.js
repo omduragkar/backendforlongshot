@@ -1,4 +1,5 @@
 const response = require('../helper/response')
+const Item = require('../model/ItemSchema')
 const ItemType = require('../model/ItemTypeSchema')
 
 module.exports.createItemTypesController = async (req, res) => {
@@ -25,7 +26,7 @@ module.exports.renameItemTypesController = async (req, res) => {
       response(res, 404, 'Item type not found' , null, true);
     }
     else{
-      response(res, 200, 'Success' , itemType, true);
+      response(res, 200, 'Success' , itemType, false);
 
     }
  } catch (error) {
@@ -44,12 +45,12 @@ module.exports.deleteItemTypesController = async (req, res) => {
       if (itemsWithItemType.length > 0) {
         response(res, 400, 'Item type is still in use', null , true);
       }else{
-        await itemType.remove()
+        await itemType.deleteOne();
         response(res, 200, 'Item type deleted successfully', null , false);
       }
     }
   } catch (error) {
-    
+    console.log({error})
     response(res, 500, 'Internal server error', error , true);
 
   }

@@ -78,11 +78,13 @@ const getStorageSpaces = async (req, res) => {
  */
 const singleStorageSpace = async (req, res) => {
   try {
-    const storageSpace = await StorageSpace.findById(req.params.id)
-    if (!storageSpace) {
+    const allItems = await Item.find({
+      storageSpace:req.params.id
+    })
+    if (!allItems) {
       response(res, 404, 'Storage space not found', null, true);
     }else{
-      response(res, 200, 'All Storage Spaces', storageSpace, false);
+      response(res, 200, 'All Items in StorageSpaces', allItems, false);
     }
     
   } catch (error) {

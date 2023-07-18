@@ -2,8 +2,6 @@ const express = require('express')
 
 const {
   createItemTypesController,
-  getAllItemTypesController,
-  getSpecifiedItemTypesController,
   renameItemTypesController,
   deleteItemTypesController
 } = require('../controller/itemtypescontroller')
@@ -11,7 +9,7 @@ const {
 const router = express.Router()
 
 // Create a new item type
-router.post('/', createItemTypesController)
+router.post('/create', createItemTypesController)
 
 
 // Rename an item type
